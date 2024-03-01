@@ -4,3 +4,10 @@ development:
       uri: mongodb+srv://hbnoboa:hbn110900@ios-teste.5hr7ppf.mongodb.net/test?retryWrites=true&w=majority&appName=ios-teste
       options:
         server_selection_timeout: 5
+
+production:
+  clients:
+    default:
+      uri: mongodb+srv://hbnoboa:hbn110900@ios-teste.5hr7ppf.mongodb.net/test?retryWrites=true&w=majority&appName=ios-teste
+      options:
+        server_selection_timeout: 5
