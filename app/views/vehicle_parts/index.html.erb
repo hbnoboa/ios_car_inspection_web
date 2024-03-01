@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Vehicle parts</h1>
+
+<div id="vehicle_parts">
+  <% @vehicle_parts.each do |vehicle_part| %>
+    <%= render vehicle_part %>
+    <p>
+      <%= link_to "Show this vehicle part", vehicle_part %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New vehicle part", new_vehicle_part_path %>

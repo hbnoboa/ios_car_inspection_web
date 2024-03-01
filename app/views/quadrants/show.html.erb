@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @quadrant %>
+
+<div>
+  <%= link_to "Edit this quadrant", edit_quadrant_path(@quadrant) %> |
+  <%= link_to "Back to quadrants", quadrants_path %>
+
+  <%= button_to "Destroy this quadrant", @quadrant, method: :delete %>
+</div>

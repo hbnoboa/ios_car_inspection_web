@@ -1,0 +1,70 @@
+<%= form_with(model: [@vehicle, nonconformity]) do |form| %>
+  <% if nonconformity.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(nonconformity.errors.count, "error") %> prohibited this nonconformity from being saved:</h2>
+
+      <ul>
+        <% nonconformity.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :vehicleParts, style: "display: block" %>
+    <%= form.collection_select :vehicleParts, VehiclePart.all, :id, :name %>
+  </div>
+
+  <div>
+    <%= form.label :nonconformityTypes, style: "display: block" %>
+    <%= form.collection_select :nonconformityTypes, NonconformityType.all, :id, :nctype %>
+
+  </div>
+
+  <div>
+    <%= form.label :nonconformityLevels, style: "display: block" %>
+    <%= form.collection_select :nonconformityLevels, NonconformityLevel.all, :id, :level %>
+
+  </div>
+
+  <div>
+    <%= form.label :quadrants, style: "display: block" %>
+    <%= form.collection_select :quadrants, Quadrant.all, :id, :option %>
+
+  </div>
+
+  <div>
+    <%= form.label :measures, style: "display: block" %>
+    <%= form.collection_select :measures, Measure.all, :id, :size %>
+  </div>
+
+  <div>
+    <%= form.label :nonconformityLocals, style: "display: block" %>
+    <%= form.collection_select :nonconformityLocals, NonconformityLocal.all, :id, :local %>
+  </div>
+
+  <div>
+    <%= form.label :image1, style: "display: block" %>
+    <%= form.file_field :image1 %>
+  </div>
+
+  <div>
+    <%= form.label :image2, style: "display: block" %>
+    <%= form.file_field :image2 %>
+  </div>
+
+  <div>
+    <%= form.label :image3, style: "display: block" %>
+    <%= form.file_field :image3 %>
+  </div>
+
+  <div>
+    <%= form.label :image4, style: "display: block" %>
+    <%= form.file_field :image4 %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

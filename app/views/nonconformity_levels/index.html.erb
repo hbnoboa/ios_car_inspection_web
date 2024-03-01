@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Nonconformity levels</h1>
+
+<div id="nonconformity_levels">
+  <% @nonconformity_levels.each do |nonconformity_level| %>
+    <%= render nonconformity_level %>
+    <p>
+      <%= link_to "Show this nonconformity level", nonconformity_level %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New nonconformity level", new_nonconformity_level_path %>

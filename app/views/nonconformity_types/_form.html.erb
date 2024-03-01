@@ -1,0 +1,22 @@
+<%= form_with(model: nonconformity_type) do |form| %>
+  <% if nonconformity_type.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(nonconformity_type.errors.count, "error") %> prohibited this nonconformity_type from being saved:</h2>
+
+      <ul>
+        <% nonconformity_type.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :nctype, style: "display: block" %>
+    <%= form.text_field :nctype %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  vehicleParts: 1
+  nonconformityTypes: 1
+  nonconformityLevels: 1
+  quadrants: 1
+  measures: 1
+  nonconformityLocals: 1
+  Vehicles: one
+
+two:
+  vehicleParts: 1
+  nonconformityTypes: 1
+  nonconformityLevels: 1
+  quadrants: 1
+  measures: 1
+  nonconformityLocals: 1
+  Vehicles: two

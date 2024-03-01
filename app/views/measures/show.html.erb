@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @measure %>
+
+<div>
+  <%= link_to "Edit this measure", edit_measure_path(@measure) %> |
+  <%= link_to "Back to measures", measures_path %>
+
+  <%= button_to "Destroy this measure", @measure, method: :delete %>
+</div>

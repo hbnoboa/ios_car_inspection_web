@@ -1,0 +1,43 @@
+<section class = "position-relative top-50 start-50 translate-middle">
+    <div class="container">
+        <div class="card" style="border-radius: 1rem;">
+            <div class="card-body p-5">
+                <div class="row d-flex justify-content-center align-items-center">
+                    <div class="col-md-9 col-lg-6 col-xl-5">
+                    <%= image_tag("toyota_logo.png", :alt => "sair", class:"img-fluid", alt: "integrary-logo" )%>
+                    </div>
+                    <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+                        <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |form| %>
+                            <div class="align-items-center justify-content-center justify-content-lg-start">
+
+                                <div class="form-outline mb-4">
+                                    <label class="form-label"> E-Mail </label><br>
+                                    <%= form.text_field :email, class: "form-control form-control-lg", autofocus: true, autocomplete: "email" %>  
+                                </div>
+
+                                <div class="form-outline mb-3">
+                                    <label class="form-label"> Senha </label><br>
+                                    <%= form.password_field :password, class: "form-control form-control-lg", autocomplete: "current-password" %>
+                                </div>
+                                
+                                <div class="text-center text-lg-end pt-2">
+                                    <% if devise_mapping.rememberable? %>
+                                        <div class="field">
+                                        <%= form.check_box :remember_me %>
+                                        <%= form.label :remember_me %>
+                                        </div>
+                                    <% end %>
+                                </div>
+
+                                <div class="text-center text-lg-end mt-4 pt-2">
+                                    <%= form.submit "Login", class:"btn btn-secondary" %>
+                                </div>
+
+                            </div>
+                        <% end %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

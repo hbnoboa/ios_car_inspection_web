@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  location: MyString
+  type: 
+  chassis: MyString
+  nonconformity: 1
+  model: MyString
+  status: MyString
+  ship: MyString
+  situation: MyString
+  observations: MyText
+
+two:
+  location: MyString
+  type: 
+  chassis: MyString
+  nonconformity: 1
+  model: MyString
+  status: MyString
+  ship: MyString
+  situation: MyString
+  observations: MyText

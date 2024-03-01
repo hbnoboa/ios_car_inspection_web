@@ -1,0 +1,15 @@
+html,
+body {
+    height: 100%;
+    background-color: #f8f9fa;
+}
+
+.content {
+    margin-left: 4.5rem;
+    padding: 1px 10px;
+    height: 100%;
+}
+
+.navbar {
+    height: 95px;
+}

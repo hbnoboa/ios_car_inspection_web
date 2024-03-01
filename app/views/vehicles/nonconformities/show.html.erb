@@ -1,0 +1,11 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @nonconformity %>
+
+<div>
+<%= link_to 'Edit', edit_vehicle_nonconformity_path(@vehicle, @nonconformity) %>
+
+  <%= link_to "Back to nonconformities", @vehicle %>
+
+  <%= button_to "Destroy this nonconformity", [@vehicle, @nonconformity], method: :delete %>
+</div>

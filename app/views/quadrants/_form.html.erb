@@ -1,0 +1,22 @@
+<%= form_with(model: quadrant) do |form| %>
+  <% if quadrant.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(quadrant.errors.count, "error") %> prohibited this quadrant from being saved:</h2>
+
+      <ul>
+        <% quadrant.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :option, style: "display: block" %>
+    <%= form.number_field :option %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Nonconformity locals</h1>
+
+<div id="nonconformity_locals">
+  <% @nonconformity_locals.each do |nonconformity_local| %>
+    <%= render nonconformity_local %>
+    <p>
+      <%= link_to "Show this nonconformity local", nonconformity_local %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New nonconformity local", new_nonconformity_local_path %>

@@ -1,0 +1,27 @@
+<%= form_with(model: vehicle_part) do |form| %>
+  <% if vehicle_part.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(vehicle_part.errors.count, "error") %> prohibited this vehicle_part from being saved:</h2>
+
+      <ul>
+        <% vehicle_part.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :area, style: "display: block" %>
+    <%= form.number_field :area %>
+  </div>
+
+  <div>
+    <%= form.label :name, style: "display: block" %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

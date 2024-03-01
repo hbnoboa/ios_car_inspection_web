@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Nonconformities</h1>
+
+<div id="nonconformities">
+  <% @nonconformities.each do |nonconformity| %>
+    <%= render vehicle_nonconformity %>
+    <p>
+      <%= link_to "Show this nonconformity", vehicle_nonconformity %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New nonconformity", new_vehicle_nonconformity_path %>
