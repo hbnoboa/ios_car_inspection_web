@@ -22,6 +22,7 @@ class VehiclesController < ApplicationController
 
   # POST /vehicles or /vehicles.json
   def create
+    preprocess_image_params(params)
     @vehicle = Vehicle.new(vehicle_params)
 
     respond_to do |format|
@@ -48,15 +49,6 @@ class VehiclesController < ApplicationController
     end
   end
 
-  def update_images
-    @vehicle = Vehicle.find(params[:id])
-
-    if @vehicle.update(vehicle_images_params)
-      render json: @vehicle, status: :ok
-    else
-      render json: @vehicle.errors, status: :unprocessable_entity
-    end
-  end
 
   # DELETE /vehicles/1 or /vehicles/1.json
   def destroy
@@ -69,13 +61,24 @@ class VehiclesController < ApplicationController
   end
 
   private
+
+  def preprocess_image_params(params)
+    # Iterate over each image attribute
+    [:etChassisImage, :profileImage, :frontImage, :backImage, :rightSideImage, :leftSideImage].each do |image_attr|
+      # Check if the image attribute is present in params
+      if params[:vehicle][image_attr].present?
+        # Read the uploaded file and encode its contents as Base64
+        file = params[:vehicle][image_attr].tempfile
+        encoded_data = Base64.strict_encode64(file.read)
+        # Update the corresponding parameter with the Base64-encoded string
+        params[:vehicle]["#{image_attr}"] = "data:#{params[:vehicle][image_attr].content_type};base64,#{encoded_data}"
+      end
+    end
+  end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_vehicle
       @vehicle = Vehicle.find(params[:id])
-    end
-
-    def vehicle_images_params
-      params.require(:vehicle).permit(:etChassisImage, :profileImage, :frontImage, :backImage, :rightSideImage, :leftSideImage)
     end
 
     # Only allow a list of trusted parameters through.

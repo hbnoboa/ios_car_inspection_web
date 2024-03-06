@@ -1,64 +1,63 @@
-<div id="<%= dom_id vehicle %>">
-  <p>
-    <strong>Location:</strong>
-    <%= vehicle.location %>
-  </p>
+  <div id="<%= dom_id vehicle %>">
+    <p>
+      <strong>Location:</strong>
+      <%= vehicle.location %>
+    </p>
 
-  <p>
-    <strong>Type:</strong>
-    <%= vehicle.type %>
-  </p>
+    <p>
+      <strong>Type:</strong>
+      <%= vehicle.type %>
+    </p>
 
-  <p>
-    <strong>Chassis:</strong>
-    <%= vehicle.chassis %>
-  </p>
+    <p>
+      <strong>Chassis:</strong>
+      <%= vehicle.chassis %>
+    </p>
 
-  <p>
-    <strong>Nonconformity:</strong>
-    <%= vehicle.nonconformity %>
-  </p>
+    <p>
+      <strong>Nonconformity:</strong>
+      <%= vehicle.nonconformity %>
+    </p>
 
-  <p>
-    <strong>Model:</strong>
-    <%= vehicle.model %>
-  </p>
+    <p>
+      <strong>Model:</strong>
+      <%= vehicle.model %>
+    </p>
 
-  <p>
-    <strong>Status:</strong>
-    <%= vehicle.status %>
-  </p>
+    <p>
+      <strong>Status:</strong>
+      <%= vehicle.status %>
+    </p>
 
-  <p>
-    <strong>Ship:</strong>
-    <%= vehicle.ship %>
-  </p>
+    <p>
+      <strong>Ship:</strong>
+      <%= vehicle.ship %>
+    </p>
 
-  <p>
-    <strong>Situation:</strong>
-    <%= vehicle.situation %>
-  </p>
+    <p>
+      <strong>Situation:</strong>
+      <%= vehicle.situation %>
+    </p>
 
-  <p>
-    <strong>Observations:</strong>
-    <%= vehicle.observations %>
-  </p>
+    <p>
+      <strong>Observations:</strong>
+      <%= vehicle.observations %>
+    </p>
 
-  <% [:etChassisImage, :profileImage, :frontImage, :backImage, :rightSideImage, :leftSideImage].each do |image_attr| %>
-    <% if vehicle.send(image_attr).present? %>
-      <% data_uri = "data:#{vehicle.send(image_attr).file.content_type};base64,#{Base64.strict_encode64(vehicle.send(image_attr).file.read)}" %>
-      <p>
-        <strong><%= image_attr.to_s.capitalize.gsub('Image', '') %> :</strong>
-        <%= image_tag data_uri, alt: "#{image_attr.to_s.capitalize.gsub('Image', '')} Image" %>
-      </p>
+    <% [:etChassisImage, :profileImage, :frontImage, :backImage, :rightSideImage, :leftSideImage].each do |image_attr| %>
+      <% if vehicle.send(image_attr).present? %>
+        <p>
+          <strong><%= image_attr.to_s.capitalize.gsub('Image', '') %> :</strong>
+<img src="<%= vehicle.send(image_attr) %>" alt="<%= image_attr.to_s.capitalize.gsub('Image', '') %> Image" />  
+        </p>
+      <% end %>
     <% end %>
-  <% end %>
 
 
-  <div class="row">
-    <div class="dataTables_scrollBody" style="position: relative; overflow: auto; width: 100%;">
-      <%= render partial: "shared/nonconformities_index" %>
+    <div class="row">
+      <div class="dataTables_scrollBody" style="position: relative; overflow: auto; width: 100%;">
+        <%= render partial: "shared/nonconformities_index" %>
+      </div>
     </div>
-  </div>
 
-</div>
+  </div>

@@ -2,12 +2,12 @@ class Vehicle
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  mount_uploader :etChassisImage, FileUploader
-  mount_uploader :profileImage, FileUploader
-  mount_uploader :frontImage, FileUploader
-  mount_uploader :backImage, FileUploader
-  mount_uploader :rightSideImage, FileUploader
-  mount_uploader :leftSideImage, FileUploader
+  field :etChassisImage, type: String 
+  field :profileImage, type: String 
+  field :frontImage, type: String 
+  field :backImage, type: String 
+  field :rightSideImage, type: String 
+  field :leftSideImage, type: String 
 
   field :location, type: String
   field :type, type: String

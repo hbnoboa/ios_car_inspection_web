@@ -7,9 +7,6 @@ Rails.application.routes.draw do
   resources :vehicle_parts
   resources :vehicles do
     resources :nonconformities, module: :vehicles
-    member do
-      patch 'update_images', to: 'vehicles#update_images'
-    end
   end
 
   devise_for :profiles, controllers: {
