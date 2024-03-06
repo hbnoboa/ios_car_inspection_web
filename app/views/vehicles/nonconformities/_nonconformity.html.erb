@@ -36,10 +36,9 @@
 
   <% [:image1, :image2, :image3, :image4].each do |image_attr| %>
     <% if nonconformity.send(image_attr).present? %>
-      <% data_uri = "data:#{nonconformity.send(image_attr).file.content_type};base64,#{Base64.strict_encode64(nonconformity.send(image_attr).file.read)}" %>
       <p>
         <strong><%= image_attr.to_s.capitalize.gsub('Image', '') %> :</strong>
-        <%= image_tag data_uri, alt: "#{image_attr.to_s.capitalize.gsub('Image', '')} Image" %>
+        <img src="<%= nonconformity.send(image_attr) %>" alt="<%= image_attr.to_s.capitalize.gsub('Image', '') %> Image" />  
       </p>
     <% end %>
   <% end %>

@@ -63,14 +63,10 @@ class VehiclesController < ApplicationController
   private
 
   def preprocess_image_params(params)
-    # Iterate over each image attribute
     [:etChassisImage, :profileImage, :frontImage, :backImage, :rightSideImage, :leftSideImage].each do |image_attr|
-      # Check if the image attribute is present in params
       if params[:vehicle][image_attr].present?
-        # Read the uploaded file and encode its contents as Base64
         file = params[:vehicle][image_attr].tempfile
         encoded_data = Base64.strict_encode64(file.read)
-        # Update the corresponding parameter with the Base64-encoded string
         params[:vehicle]["#{image_attr}"] = "data:#{params[:vehicle][image_attr].content_type};base64,#{encoded_data}"
       end
     end

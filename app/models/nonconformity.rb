@@ -2,10 +2,10 @@ class Nonconformity
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  mount_uploader :image1, FileUploader
-  mount_uploader :image2, FileUploader
-  mount_uploader :image3, FileUploader
-  mount_uploader :image4, FileUploader
+  field :image1, type: String
+  field :image2, type: String
+  field :image3, type: String
+  field :image4, type: String
 
   field :vehicleParts, type: String
   field :nonconformityTypes, type: String
