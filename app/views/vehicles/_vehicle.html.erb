@@ -45,7 +45,7 @@
     </p>
 
     <% [:etChassisImage, :profileImage, :frontImage, :backImage, :rightSideImage, :leftSideImage].each do |image_attr| %>
-      <% if vehicle.send(image_attr).present? && vehicle.send(image_attr).file.present? %>
+      <% if vehicle.send(image_attr).present? %>
         <p>
           <strong><%= image_attr.to_s.capitalize.gsub('Image', '') %> :</strong>
           <img src="<%= vehicle.send(image_attr) %>" alt="<%= image_attr.to_s.capitalize.gsub('Image', '') %> Image" />  
