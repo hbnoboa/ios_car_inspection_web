@@ -5,6 +5,8 @@ ruby "3.1.4"
 
 gem 'mongoid'
 
+gem 'pagy', '~> 5.10 '
+
 gem 'rack-cors', require: 'rack/cors'
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"

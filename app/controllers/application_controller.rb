@@ -1,6 +1,10 @@
 class ApplicationController < ActionController::Base
+    include Pagy::Backend
+    require 'pagy/extras/bootstrap'
+    
     before_action :authenticate_profile_or_token!
     before_action :authenticate_profile!, unless: :token_authenticated?
+
 
     def authenticate_profile_or_token!
         if current_profile.nil?

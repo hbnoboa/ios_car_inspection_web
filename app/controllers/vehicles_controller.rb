@@ -4,8 +4,38 @@ class VehiclesController < ApplicationController
 
   # GET /vehicles or /vehicles.json
   def index
-    @vehicles = Vehicle.all
+    @query = params[:query]
+    page = (params[:page] || 1).to_i
+    per_page = 10 # Number of items per page
+  
+    if @query.present?
+      # Perform a case-insensitive search across all fields of the Vehicle model
+      @vehicles = Vehicle.any_of(
+        { chassis: /#{@query}/i },
+        { model: /#{@query}/i },
+        { location: /#{@query}/i },
+        { ship: /#{@query}/i },
+        { situation: /#{@query}/i },
+        { nonconformity: /#{@query}/i }
+      )
+    else
+      # If no search query is provided, display all vehicles
+      @vehicles = Vehicle.all
+    end
+  
+    total_count = @vehicles.count
+    total_pages = (total_count.to_f / per_page).ceil
+  
+    # Calculate the offset and limit for pagination
+    offset = per_page * (page - 1)
+    limit = per_page
+  
+    # Apply pagination
+    @vehicles = @vehicles.limit(limit).skip(offset)
+  
+    @pagy = Pagy.new(count: total_count, page: page, items: per_page)
   end
+  
 
   # GET /vehicles/1 or /vehicles/1.json
   def show
