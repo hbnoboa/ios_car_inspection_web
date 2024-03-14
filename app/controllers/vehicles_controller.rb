@@ -17,10 +17,10 @@ class VehiclesController < ApplicationController
         { ship: /#{@query}/i },
         { situation: /#{@query}/i },
         { nonconformity: /#{@query}/i }
-      )
+      ).where(done: "yes")
     else
       # If no search query is provided, display all vehicles
-      @vehicles = Vehicle.all
+      @vehicles = Vehicle.all.where(done: "yes")
     end
   
     total_count = @vehicles.count

@@ -1,37 +1,37 @@
 <div id="<%= dom_id nonconformity %>">
   <p>
     <strong>Vehicleparts:</strong>
-    <%= nonconformity.vehicleParts %>
+    <%= VehiclePart.find(nonconformity.vehicleParts).name %>
   </p>
 
   <p>
     <strong>Nonconformitytypes:</strong>
-    <%= nonconformity.nonconformityTypes %>
+    <%= NonconformityType.find(nonconformity.nonconformityTypes).nctype %>
   </p>
 
   <p>
     <strong>Nonconformitylevels:</strong>
-    <%= nonconformity.nonconformityLevels %>
+    <%= NonconformityLevel.find(nonconformity.nonconformityLevels).level %>
   </p>
 
   <p>
     <strong>Quadrants:</strong>
-    <%= nonconformity.quadrants %>
+    <%= Quadrant.find(nonconformity.quadrants).option %>
   </p>
 
   <p>
     <strong>Measures:</strong>
-    <%= nonconformity.measures %>
+    <%= Measure.find(nonconformity.measures).size %>
   </p>
 
   <p>
     <strong>Nonconformitylocals:</strong>
-    <%= nonconformity.nonconformityLocals %>
+    <%= NonconformityLocal.find(nonconformity.nonconformityLocals).local %>
   </p>
 
   <p>
     <strong>Vehicles:</strong>
-    <%= nonconformity.vehicle_id %>
+    <%= Vehicle.find(nonconformity.vehicle_id).chassis %>
   </p>
 
   <% [:image1, :image2, :image3, :image4].each do |image_attr| %>

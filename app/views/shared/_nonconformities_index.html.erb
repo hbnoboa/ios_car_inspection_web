@@ -15,12 +15,12 @@
     <% @vehicle.nonconformities.each do |nonconformity| %>
     <tbody>
       <tr>
-        <td class="text-center"><%= nonconformity.nonconformityLocals %></td>
-        <td class="text-center"><%= nonconformity.vehicleParts %></td>
-        <td class="text-center"><%= nonconformity.nonconformityTypes %></td>
-        <td class="text-center"><%= nonconformity.nonconformityLevels %></td>
-        <td class="text-center"><%= nonconformity.quadrants %></td>
-        <td class="text-center"><%= nonconformity.measures %></td>
+        <td class="text-center"><%= NonconformityLocal.find(nonconformity.nonconformityLocals).local %></td>
+        <td class="text-center"><%= VehiclePart.find(nonconformity.vehicleParts).name %></td>
+        <td class="text-center"><%= NonconformityType.find(nonconformity.nonconformityTypes).nctype %></td>
+        <td class="text-center"><%= NonconformityLevel.find(nonconformity.nonconformityLevels).level %></td>
+        <td class="text-center"><%= Quadrant.find(nonconformity.quadrants).option %></td>
+        <td class="text-center"><%= Measure.find(nonconformity.measures).size %></td>
 
 
         <td class="justify-content-center d-flex">
