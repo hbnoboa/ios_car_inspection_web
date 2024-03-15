@@ -49,6 +49,8 @@ class VehiclesController < ApplicationController
         end
       end
     pdf.stroke_horizontal_rule
+
+  
     
     pdf.bounding_box([pdf.bounds.left + 5, pdf.bounds.top - 170], width: pdf.bounds.width) do
       pdf.text_box "Chassi: ", size: 10, at: [pdf.bounds.left, pdf.bounds.top], size: 10
@@ -147,6 +149,14 @@ class VehiclesController < ApplicationController
     pdf.table(table6) do |table|
       table.column_widths = [112.5, 112.5, 112.5, 112.5]
       table.cells.style(border_color: 'FFFFFF', border_width: 0)
+    end
+
+    pdf.canvas do 
+
+      pdf.bounding_box([pdf.bounds.right - 300, pdf.bounds.bottom + 20], width: pdf.bounds.width) do
+        pdf.move_down(5)
+        pdf.text "IOS – Inteligência em Operações Sustentáveis"
+    end
     end
 
     
