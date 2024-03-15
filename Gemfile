@@ -7,6 +7,10 @@ gem 'mongoid'
 
 gem 'pagy', '~> 5.10 '
 
+gem 'prawn', '~> 2.4'
+gem "prawn-table", "~> 0.2.2"
+
+
 gem 'rack-cors', require: 'rack/cors'
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
