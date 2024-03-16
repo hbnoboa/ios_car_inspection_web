@@ -13,6 +13,8 @@ class Vehicle
   field :type, type: String
   field :chassis, type: String
   field :nonconformity, type: Integer
+  field :brand, type: String
+  field :travel, type: String
   field :model, type: String
   field :status, type: String
   field :ship, type: String

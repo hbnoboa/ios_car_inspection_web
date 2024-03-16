@@ -7,6 +7,9 @@ Rails.application.routes.draw do
   resources :vehicle_parts
   resources :vehicles do
     resources :nonconformities, module: :vehicles
+    collection do
+      get 'index_pdf', to: 'vehicles#index_pdf', as: 'vehicles_index_pdf'
+    end
   end
 
   devise_for :profiles, controllers: {
@@ -20,7 +23,6 @@ Rails.application.routes.draw do
     end
   end
 
-  get 'vehicles/pdf', to: 'vehicles#pdf', as: 'vehicles_pdf'
   get 'vehicles/show_pdf/:id', to: 'vehicles#show_pdf', as: 'vehicles_show_pdf'
   get 'home', to: 'home#index'
   root 'home#index'

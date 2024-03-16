@@ -9,7 +9,8 @@
   </div>
 <% end %>
 
-<%= link_to "Generate Index PDF", vehicles_path(format: :pdf), class: "btn btn-primary mb-3" %>
+<%= link_to "Generate PDF", vehicles_index_pdf_vehicles_path, class: "btn btn-primary mb-3" %>
+
 
 <table class="table table-striped table-bordered table-sm">
   <thead>
@@ -20,6 +21,7 @@
       <th class="text-center">Navio</th>
       <th class="text-center">Situação</th>
       <th class="text-center">Nº Não Conformidades</th>
+      <th class="text-center">Data</th>
       <th class="text-center">Ações</th>
     </tr>
   </thead>
@@ -32,6 +34,7 @@
         <td class="text-center"><%= vehicle.ship %></td>
         <td class="text-center"><%= vehicle.situation %></td>
         <td class="text-center"><%= vehicle.nonconformity %></td>
+        <td class="text-center"><%= vehicle.updated_at %></td>
         <td class="justify-content-center d-flex">
           <%= link_to image_tag("see.png", alt: "sair", size: "12x12", class: "img-fluid"), vehicle, class: "btn btn-link px-1" %>
           <%= link_to image_tag("pdf.png", alt: "sair", size: "12x12", class: "img-fluid"), vehicles_show_pdf_path(vehicle), target: "_blank", class: "btn btn-link px-1" %>

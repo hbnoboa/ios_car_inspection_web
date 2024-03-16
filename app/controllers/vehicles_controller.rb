@@ -15,9 +15,9 @@ class VehiclesController < ApplicationController
         { ship: /#{@query}/i },
         { situation: /#{@query}/i },
         { nonconformity: /#{@query}/i }
-      ).where(done: 'yes')
+      ).where(done: 'yes', :updated_at.ne => nil).order(updated_at: :asc)
     else
-      @vehicles = Vehicle.all.where(done: 'yes')
+      @vehicles = Vehicle.all.where(done: 'yes', :updated_at.ne => nil).order(updated_at: :asc)
     end
 
     total_count = @vehicles.count
@@ -52,7 +52,7 @@ class VehiclesController < ApplicationController
 
   
     
-    pdf.bounding_box([pdf.bounds.left + 5, pdf.bounds.top - 170], width: pdf.bounds.width) do
+    pdf.bounding_box([pdf.bounds.left + 5, pdf.cursor - 15], width: pdf.bounds.width) do
       pdf.text_box "Chassi: ", size: 10, at: [pdf.bounds.left, pdf.bounds.top], size: 10
       pdf.text_box @vehicle.chassis, at: [pdf.bounds.left + 40, pdf.bounds.top], size: 10, style: :bold   
       pdf.text_box "Modelo: ", size: 10, at: [pdf.bounds.left, pdf.bounds.top - 15], size: 10
@@ -151,12 +151,14 @@ class VehiclesController < ApplicationController
       table.cells.style(border_color: 'FFFFFF', border_width: 0)
     end
 
-    pdf.canvas do 
 
-      pdf.bounding_box([pdf.bounds.right - 300, pdf.bounds.bottom + 20], width: pdf.bounds.width) do
-        pdf.move_down(5)
-        pdf.text "IOS – Inteligência em Operações Sustentáveis"
-    end
+    pdf.repeat(:all) do
+      pdf.canvas do 
+        pdf.bounding_box([pdf.bounds.right - 300, pdf.bounds.bottom + 20], width: pdf.bounds.width) do
+          pdf.move_down(5)
+          pdf.text "IOS – Inteligência em Operações Sustentáveis"
+        end
+      end
     end
 
     
@@ -165,6 +167,156 @@ class VehiclesController < ApplicationController
               type: 'application/pdf',
               disposition: 'inline'
              )
+  end
+
+  def index_pdf
+    @query = params[:query]
+  
+    if @query.present?
+      @vehicles = Vehicle.any_of(
+        { chassis: /#{@query}/i },
+        { model: /#{@query}/i },
+        { location: /#{@query}/i },
+        { ship: /#{@query}/i },
+        { situation: /#{@query}/i },
+        { nonconformity: /#{@query}/i }
+      ).where(done: 'yes', :updated_at.ne => nil).order(updated_at: :asc)
+    else
+      @vehicles = Vehicle.all.where(done: 'yes', :updated_at.ne => nil).order(updated_at: :asc)
+    end
+  
+    pdf = Prawn::Document.new(page_size: 'A4', :margin => [70,70,70,70])
+  
+    image_width = 80
+    x_coordinate = (pdf.bounds.width - image_width) / 2
+  
+    pdf.repeat(:all) do
+      pdf.bounding_box([pdf.bounds.left, pdf.bounds.top, pdf.bounds.right, pdf.bounds.bottom], width: pdf.bounds.right, height: pdf.bounds.top - 600) do
+        pdf.image Rails.root.join('app', 'assets', 'images', 'nexus.jpg'), width: image_width, at: [x_coordinate, pdf.bounds.top]
+      end
+    end
+  
+    pdf.bounding_box([pdf.bounds.left, pdf.cursor], width: pdf.bounds.width) do
+    pdf.bounding_box([pdf.bounds.left, pdf.cursor], width: pdf.bounds.width, height: 150) do
+      pdf.text "RELATÓRIO DE INSPEÇÃO", size: 10
+      pdf.move_down 40
+      pdf.text "1 – INFORMAÇÃO GERAL" , size: 10, align: :center, style: :bold   
+      pdf.text_box "NOME DO NAVIO: ", size: 10, at: [pdf.bounds.left, pdf.bounds.top - 70], size: 10, style: :bold  
+      pdf.text_box @vehicles.first.ship, at: [pdf.bounds.left + 90, pdf.bounds.top - 70], size: 10
+      pdf.text_box "Nº DA VIAGEM: ", size: 10, at: [pdf.bounds.left, pdf.bounds.top - 90], size: 10, style: :bold  
+      pdf.text_box @vehicles.first.travel, at: [pdf.bounds.left + 75, pdf.bounds.top - 90], size: 10
+      pdf.text_box "DATA DA OPERAÇÃO: ", size: 10, at: [pdf.bounds.left, pdf.bounds.top - 110], size: 10, style: :bold  
+      pdf.text_box @vehicles.first.updated_at.strftime("%d/%m/%Y"), at: [pdf.bounds.left + 110, pdf.bounds.top - 110], size: 10
+    end
+    pdf.bounding_box([pdf.bounds.left, pdf.cursor, pdf.bounds.bottom], width: pdf.bounds.width, height: 100) do
+      pdf.text "2 – INFORMAÇÕES DA OPERAÇÃO " , size: 10, align: :center, style: :bold 
+      pdf.text_box "INICIO OPERAÇÃO / DESCARGA: ", size: 10, at: [pdf.bounds.left, pdf.bounds.top - 20], size: 10, style: :bold  
+      pdf.text_box  @vehicles.first.updated_at.strftime("%d/%m/%Y - %H:%M"), at: [pdf.bounds.left + 165, pdf.bounds.top - 20], size: 10
+      pdf.text_box "FIM OPERAÇÃO DESCARGA: ", size: 10, at: [pdf.bounds.left, pdf.bounds.top - 40], size: 10, style: :bold  
+      pdf.text_box  @vehicles.last.updated_at.strftime("%d/%m/%Y - %H:%M"), at: [pdf.bounds.left + 145, pdf.bounds.top - 40], size: 10
+      pdf.text_box "QUANTIDADE DE VEÍCULOS: ", size: 10, at: [pdf.bounds.left, pdf.bounds.top - 60], size: 10, style: :bold  
+      pdf.text_box  "#{@vehicles.count.to_s} VEÍCULOS", at: [pdf.bounds.left + 146, pdf.bounds.top - 60], size: 10
+      pdf.text_box "VEÍCULOS AVARIADOS: ", size: 10, at: [pdf.bounds.left + 250, pdf.bounds.top - 60], size: 10, style: :bold  
+      pdf.text_box "#{@vehicles.where(:nonconformity.gt => 0).count} VEÍCULO(S)", at: [pdf.bounds.left + 370, pdf.bounds.top - 60], size: 10
+    end
+
+    header = [["MARCA", "MODELO", "Unidades", "Total Avariados", "%"]]
+
+    vehicles = @vehicles.group_by(&:model)
+    
+    vehicle_data = vehicles.map do |model, vehicles_for_model|
+      total_units = vehicles_for_model.size
+      total_faulty = vehicles_for_model.count { |vehicle| vehicle.nonconformity != 0 }
+      total_faulty == 0 ? percentage = nil : percentage = total_faulty.to_f / total_units * 100
+      
+    
+      [vehicles_for_model.first.brand, model, total_units, total_faulty, percentage.nil? ? '' : "#{percentage.round(2)}%"]
+    end
+    
+      pdf.text "3 – ESTATISCA DE DESCARREGAMENTO" , size: 10, align: :center, style: :bold 
+      pdf.move_down 10
+
+      pdf.table(header + vehicle_data) do |table|
+        table.column_widths = [90, 190, 50, 80, 40]
+        table.row(0).font_style = :bold
+        table.cells.style(size: 8, align: :center)
+      end
+    
+      pdf.move_down 30
+
+
+
+    header = ["CHASSI", "MODELO", "ÁREA", "QUADRANTE", "DANOS"]
+
+    rows = []
+
+    @vehicles.each do |vehicle|
+      vehicle.nonconformities.each do |nonconformity|
+        vehicle_part = VehiclePart.find(nonconformity.vehicleParts).name
+        quadrant = Quadrant.find(nonconformity.quadrants).option
+        nonconformity_types = NonconformityLevel.find(nonconformity.nonconformityLevels).level
+
+        rows << [vehicle.chassis, vehicle.model, vehicle_part, quadrant, nonconformity_types]
+      end
+    end
+
+    pdf.text "4 – RELATÓRIO DE AVARIAS" , size: 10, align: :center, style: :bold 
+    pdf.move_down 10
+
+    pdf.table([header] + rows) do |table|
+      table.column_widths = [100, 115, 115, 60, 60]
+
+      table.row(0).font_style = :bold
+      table.cells.style(size: 8, align: :center)
+    end
+
+    pdf.move_down 30
+    pdf.text "5 – FOTOS DAS AVARIAS" , size: 10, align: :center, style: :bold 
+    pdf.move_down 10
+
+    headerPhotos = [['CHASSI', 'VEÍCULO', 'PEÇA AVARIADA', 'AVARIA']]
+
+    photos = []
+
+    @vehicles.each do |vehicle|
+      vehicle.nonconformities.each_with_index do |nonconformity, index|
+        chassi = StringIO.new(Base64.decode64(vehicle.etChassisImage.sub('data:image/jpeg;base64,', '')))
+        profile = StringIO.new(Base64.decode64(vehicle.profileImage.sub('data:image/jpeg;base64,', '')))
+        image1 = StringIO.new(Base64.decode64(nonconformity.image1.sub('data:image/jpeg;base64,', '')))
+        image2 = StringIO.new(Base64.decode64(nonconformity.image2.sub('data:image/jpeg;base64,', '')))
+        
+        row = []
+          row << { image: chassi, image_width: 100, position: :center }
+          row << { image: profile, image_width: 100, position: :center }
+        row += [
+          { image: image1, image_width: 100, position: :center },
+          { image: image2, image_width: 100 , position: :center }
+        ]
+        photos << row
+      end
+    end
+
+    pdf.table(headerPhotos + photos, cell_style: { inline_format: true }) do |table|
+      table.column_widths = [112.5, 112.5, 112.5, 112.5]
+      table.row(0).font_style = :bold
+      table.cells.style(size: 8, align: :center)
+      table.cells.style(border_color: 'FFFFFF', border_width: 0)
+
+
+    end
+
+  end
+  
+    pdf.repeat(:all) do
+      pdf.bounding_box([pdf.bounds.right - 200, pdf.bounds.bottom + 20], width: pdf.bounds.width) do
+        pdf.text "IOS – Inteligência em Operações Sustentáveis"
+      end
+    end
+  
+    send_data pdf.render,
+      filename: "vehicles.pdf",
+      type: 'application/pdf',
+      disposition: 'inline'
   end
 
   def new
