@@ -4,6 +4,7 @@ development:
       uri: mongodb+srv://hbnoboa:hbn110900@ios-teste.5hr7ppf.mongodb.net/test?retryWrites=true&w=majority&appName=ios-teste
       options:
         server_selection_timeout: 5
+        timezone: 'Brasilia'
 
 production:
   clients:
@@ -11,3 +12,4 @@ production:
       uri: mongodb+srv://hbnoboa:hbn110900@ios-teste.5hr7ppf.mongodb.net/test?retryWrites=true&w=majority&appName=ios-teste
       options:
         server_selection_timeout: 5
+        timezone: 'Brasilia'

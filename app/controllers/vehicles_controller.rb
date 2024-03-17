@@ -286,23 +286,25 @@ class VehiclesController < ApplicationController
         image2 = StringIO.new(Base64.decode64(nonconformity.image2.sub('data:image/jpeg;base64,', '')))
         
         row = []
-          row << { image: chassi, image_width: 100, position: :center }
-          row << { image: profile, image_width: 100, position: :center }
+        row << { image: chassi, image_width: 100, position: :center }
+        row << { image: profile, image_width: 100, position: :center }
         row += [
           { image: image1, image_width: 100, position: :center },
           { image: image2, image_width: 100 , position: :center }
         ]
         photos << row
+    
+        vehicle_row = [vehicle.chassis, vehicle.model, nonconformity.vehicleParts, nonconformity.nonconformityTypes]
+        photos << vehicle_row
       end
     end
-
+    
     pdf.table(headerPhotos + photos, cell_style: { inline_format: true }) do |table|
+      table.header = 1
+      table.cells.style(size: 6, align: :center)
       table.column_widths = [112.5, 112.5, 112.5, 112.5]
-      table.row(0).font_style = :bold
-      table.cells.style(size: 8, align: :center)
       table.cells.style(border_color: 'FFFFFF', border_width: 0)
-
-
+      table.cells.style(size: 6, align: :center)
     end
 
   end
