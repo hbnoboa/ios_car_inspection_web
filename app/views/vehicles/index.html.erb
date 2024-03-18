@@ -37,7 +37,9 @@
         <td class="text-center"><%= vehicle.updated_at %></td>
         <td class="justify-content-center d-flex">
           <%= link_to image_tag("see.png", alt: "sair", size: "12x12", class: "img-fluid"), vehicle, class: "btn btn-link px-1" %>
-          <%= link_to image_tag("pdf.png", alt: "sair", size: "12x12", class: "img-fluid"), vehicles_show_pdf_path(vehicle), target: "_blank", class: "btn btn-link px-1" %>
+          <% if vehicle.nonconformity != 0 %>
+            <%= link_to image_tag("pdf.png", alt: "sair", size: "12x12", class: "img-fluid"), vehicles_show_pdf_path(vehicle), target: "_blank", class: "btn btn-link px-1" %>
+          <% end %>
         </td>
       </tr>
     <% end %>
