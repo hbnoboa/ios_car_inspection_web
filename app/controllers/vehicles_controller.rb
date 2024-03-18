@@ -92,7 +92,7 @@ class VehiclesController < ApplicationController
       NonconformityLocal.find(nonconformity.nonconformityLocals).local,
       Quadrant.find(nonconformity.quadrants).option,
       Measure.find(nonconformity.measures).size,
-      NonconformityLevel.find(nonconformity.nonconformityLevels).level] 
+      nonconformity.nonconformityTypes == "null" ? '' : NonconformityType.find(nonconformity.nonconformityTypes).nctype] 
     }
     
     pdf.table(table3) do |table|
