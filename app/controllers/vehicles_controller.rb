@@ -88,10 +88,11 @@ class VehiclesController < ApplicationController
     table4 = [["Onde", "Local", "Quadrante", "Medida", "Dano"]]
 
     tablenonconformity = @vehicle.nonconformities.map { |nonconformity| 
-      [VehiclePart.find(nonconformity.vehicleParts).name,
-      NonconformityLocal.find(nonconformity.nonconformityLocals).local,
-      Quadrant.find(nonconformity.quadrants).option,
-      Measure.find(nonconformity.measures).size,
+      [
+      nonconformity.vehicleParts == "null" ? '' : VehiclePart.find(nonconformity.vehicleParts).name,
+      nonconformity.nonconformityLocals == "null" ? '' : NonconformityLocal.find(nonconformity.nonconformityLocals).local,
+      nonconformity.quadrants == "null" ? '' : Quadrant.find(nonconformity.quadrants).option,
+      nonconformity.measures == "null" ? '' : Measure.find(nonconformity.measures).size,
       nonconformity.nonconformityTypes == "null" ? '' : NonconformityType.find(nonconformity.nonconformityTypes).nctype] 
     }
     
@@ -184,6 +185,8 @@ class VehiclesController < ApplicationController
     else
       @vehicles = Vehicle.all.where(done: 'yes', :updated_at.ne => nil).order(updated_at: :asc)
     end
+
+    @nc = Vehicle.all.where(done: 'yes', :updated_at.ne => nil).gt(nonconformity: 0).order(updated_at: :asc)
   
     pdf = Prawn::Document.new(page_size: 'A4', :margin => [70,70,70,70])
   
@@ -278,19 +281,25 @@ class VehiclesController < ApplicationController
 
     photos = []
 
-    @vehicles.each do |vehicle|
+    errors = []
+
+    Vehicle.all.where(done: 'yes', :updated_at.ne => nil).gt(nonconformity: 0).order(updated_at: :asc).each do |vehicle|
       vehicle.nonconformities.each_with_index do |nonconformity, index|
-        chassi = StringIO.new(Base64.decode64(vehicle.etChassisImage.sub('data:image/jpeg;base64,', '')))
-        profile = StringIO.new(Base64.decode64(vehicle.profileImage.sub('data:image/jpeg;base64,', '')))
-        image1 = StringIO.new(Base64.decode64(nonconformity.image1.sub('data:image/jpeg;base64,', '')))
-        image2 = StringIO.new(Base64.decode64(nonconformity.image2.sub('data:image/jpeg;base64,', '')))
+        begin
+          chassi = StringIO.new(Base64.decode64(vehicle.etChassisImage.sub('data:image/jpeg;base64,', '')))
+          profile = StringIO.new(Base64.decode64(vehicle.profileImage.sub('data:image/jpeg;base64,', '')))
+          image1 = StringIO.new(Base64.decode64(nonconformity.image1.sub('data:image/jpeg;base64,', '')))
+          image2 = StringIO.new(Base64.decode64(nonconformity.image2.sub('data:image/jpeg;base64,', '')))
+        rescue StandardError => e
+          errors << "Error decoding image for vehicle #{vehicle.chassis}: #{e.message}"
+          next # Move to the next vehicle if an error occurs
+        end
         
-        row = []
-        row << { image: chassi, image_width: 100, position: :center }
-        row << { image: profile, image_width: 100, position: :center }
-        row += [
+        row = [
+          { image: chassi, image_width: 100, position: :center },
+          { image: profile, image_width: 100, position: :center },
           { image: image1, image_width: 100, position: :center },
-          { image: image2, image_width: 100 , position: :center }
+          { image: image2, image_width: 100, position: :center }
         ]
         photos << row
     
@@ -299,21 +308,22 @@ class VehiclesController < ApplicationController
       end
     end
     
-    pdf.table(headerPhotos + photos, cell_style: { inline_format: true }) do |table|
-      table.header = 1
-      table.cells.style(size: 6, align: :center)
-      table.column_widths = [112.5, 112.5, 112.5, 112.5]
-      table.cells.style(border_color: 'FFFFFF', border_width: 0)
-      table.cells.style(size: 6, align: :center)
+    # Print errors after the loop ends
+    errors.each { |error| puts error }
+    
+    begin
+      pdf.table(headerPhotos + photos, cell_style: { inline_format: true }) do |table|
+        table.header = 1
+        table.cells.style(size: 6, align: :center)
+        table.column_widths = [112.5, 112.5, 112.5, 112.5]
+        table.cells.style(border_color: 'FFFFFF', border_width: 0)
+        table.cells.style(size: 6, align: :center)
+      end
+    rescue StandardError => e
+      puts "Error in pdf.table block: #{e.message}"
     end
 
   end
-  
-    pdf.repeat(:all) do
-      pdf.bounding_box([pdf.bounds.right - 200, pdf.bounds.bottom + 20], width: pdf.bounds.width) do
-        pdf.text "IOS – Inteligência em Operações Sustentáveis"
-      end
-    end
   
     send_data pdf.render,
       filename: "vehicles.pdf",
