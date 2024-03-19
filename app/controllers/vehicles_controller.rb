@@ -3,22 +3,9 @@ class VehiclesController < ApplicationController
   skip_before_action :verify_authenticity_token, only: %i[create update]
 
   def index
-    @query = params[:query]
+    set_vehicles
     page = (params[:page] || 1).to_i
     per_page = 10
-
-    if @query.present?
-      @vehicles = Vehicle.any_of(
-        { chassis: /#{@query}/i },
-        { model: /#{@query}/i },
-        { location: /#{@query}/i },
-        { ship: /#{@query}/i },
-        { situation: /#{@query}/i },
-        { nonconformity: /#{@query}/i }
-      ).where(done: 'yes', :updated_at.ne => nil).order(updated_at: :asc)
-    else
-      @vehicles = Vehicle.all.where(done: 'yes', :updated_at.ne => nil).order(updated_at: :asc)
-    end
 
     total_count = @vehicles.count
     total_pages = (total_count.to_f / per_page).ceil
@@ -171,20 +158,7 @@ class VehiclesController < ApplicationController
   end
 
   def index_pdf
-    @query = params[:query]
-  
-    if @query.present?
-      @vehicles = Vehicle.any_of(
-        { chassis: /#{@query}/i },
-        { model: /#{@query}/i },
-        { location: /#{@query}/i },
-        { ship: /#{@query}/i },
-        { situation: /#{@query}/i },
-        { nonconformity: /#{@query}/i }
-      ).where(done: 'yes', :updated_at.ne => nil).order(updated_at: :asc)
-    else
-      @vehicles = Vehicle.all.where(done: 'yes', :updated_at.ne => nil).order(updated_at: :asc)
-    end
+    set_vehicles
 
     @nc = Vehicle.all.where(done: 'yes', :updated_at.ne => nil).gt(nonconformity: 0).order(updated_at: :asc)
   
@@ -382,6 +356,22 @@ class VehiclesController < ApplicationController
         encoded_data = Base64.strict_encode64(file.read)
         params[:vehicle][image_attr] = "data:#{params[:vehicle][image_attr].content_type};base64,#{encoded_data}"
       end
+    end
+  end
+
+  def set_vehicles
+    @query = params[:query]
+    if @query.present?
+      @vehicles = Vehicle.any_of(
+        { chassis: /#{@query}/i },
+        { model: /#{@query}/i },
+        { location: /#{@query}/i },
+        { ship: /#{@query}/i },
+        { situation: /#{@query}/i },
+        { nonconformity: /#{@query}/i }
+      ).where(done: 'yes', :updated_at.ne => nil).order(updated_at: :asc)
+    else
+      @vehicles = Vehicle.all.where(done: 'yes', :updated_at.ne => nil).order(updated_at: :asc)
     end
   end
 
