@@ -13,3 +13,40 @@ body {
 .navbar {
     height: 95px;
 }
+
+.btn-filter,
+.btn-filter:focus,
+.btn-filter:active {
+    color: #fff;
+    background-color: #F0764F !important;
+    border-color: #F0764F !important;
+    box-shadow: none;
+}
+
+.advanced {
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    color: #F0764F !important;
+}
+
+.form-control:focus {
+    box-shadow: none;
+    border: 1px solid #F0764F;
+}
+
+.pagination {
+    .page-item {
+        .page-link {
+            color: #F0764F !important;
+        }
+    }
+
+    .active {
+        .page-link {
+            color: white !important;
+            background-color: #F0764F !important;
+            border: black;
+        }
+    }
+}
