@@ -7,6 +7,7 @@ class VehiclesController < ApplicationController
     @chassis = params[:chassis]
     @model = params[:model]
     @situation = params[:situation]
+    @nonconformity = params[:nonconformity]
     @start_date = params[:start_date]
     @end_date = params[:end_date]
     ship_and_travel = params[:ship_and_travel]
@@ -21,6 +22,7 @@ class VehiclesController < ApplicationController
     @vehicles = @vehicles.where(:chassis => /#{@chassis}/i) if @chassis.present?
     @vehicles = @vehicles.where(model: /#{@model}/i) if @model.present?
     @vehicles = @vehicles.where(situation: /#{@situation}/i) if @situation.present?
+    @vehicles = @vehicles.where(:nonconformity.ne => 0) if @nonconformity == "0"
     @vehicles = @vehicles.where(updated_at: @start_date..@end_date) if @start_date.present? && @end_date.present?
   
     @vehicles = @vehicles.order(updated_at: :desc)
