@@ -23,7 +23,7 @@ class VehiclesController < ApplicationController
     @vehicles = @vehicles.where(situation: /#{@situation}/i) if @situation.present?
     @vehicles = @vehicles.where(updated_at: @start_date..@end_date) if @start_date.present? && @end_date.present?
   
-    @vehicles = @vehicles.order(updated_at: :asc)
+    @vehicles = @vehicles.order(updated_at: :desc)
   
     page = (params[:page] || 1).to_i
     per_page = 10
@@ -178,7 +178,7 @@ class VehiclesController < ApplicationController
              )
   end
 
-    def index_pdf
+  def index_pdf
     @ship = params[:ship]
     @chassis = params[:chassis]
     @model = params[:model]
