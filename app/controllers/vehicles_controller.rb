@@ -187,10 +187,13 @@ class VehiclesController < ApplicationController
     @situation = params[:situation]
     @start_date = params[:start_date]
     @end_date = params[:end_date]
+    @travel = params[:travel]
+
   
     @vehicles = Vehicle.where(done: 'yes').where(:updated_at.ne => nil)
   
     @vehicles = @vehicles.where(ship: @ship) if @ship.present?
+    @vehicles = @vehicles.where(travel: @travel) if @travel.present?
     @vehicles = @vehicles.where(:chassis => /#{@chassis}/i) if @chassis.present?
     @vehicles = @vehicles.where(model: /#{@model}/i) if @model.present?
     @vehicles = @vehicles.where(situation: /#{@situation}/i) if @situation.present?

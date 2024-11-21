@@ -19,7 +19,7 @@
         </div>
         <div class="col-md-3">
           <button type="submit" class="btn btn-primary btn-filter">Filtrar</button>
-          <%= link_to image_tag("pdf.png", alt: "sair", size: "40x40", class: "img-fluid"), vehicles_index_pdf_vehicles_path(ship: @ship, chassis: @chassis, model: @model, situation: @situation, start_date: @start_date, end_date: @end_date), target: "_blank", class: "ps-4" %>
+          <%= link_to image_tag("pdf.png", alt: "sair", size: "40x40", class: "img-fluid"), vehicles_index_pdf_vehicles_path(ship: @ship, travel: @travel, chassis: @chassis, model: @model, situation: @situation, start_date: @start_date, end_date: @end_date), target: "_blank", class: "ps-4" %>
         </div> 
       </div>
       <div class="mt-3">           
