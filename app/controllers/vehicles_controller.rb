@@ -41,11 +41,6 @@ class VehiclesController < ApplicationController
     @pagy = Pagy.new(count: total_count, page: page, items: per_page)
   end
 
-  def all_vehicles
-    @vehicles = Vehicle.all
-    render json: @vehicles
-  end  
-
   def show
   end
 
