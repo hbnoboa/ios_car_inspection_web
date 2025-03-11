@@ -23,6 +23,7 @@ Rails.application.routes.draw do
     end
   end
 
+  get 'vehicles/all', to: 'vehicles#all_vehicles'
   get 'vehicles/show_pdf/:id', to: 'vehicles#show_pdf', as: 'vehicles_show_pdf'
   get 'home', to: 'home#index'
   root 'home#index'
