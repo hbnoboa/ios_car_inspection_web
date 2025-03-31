@@ -394,26 +394,6 @@ class VehiclesController < ApplicationController
           Rails.logger.error("GridFS upload error: #{e.message}")
         end
 
-        begin
-          SyncedVehicle.create!(
-            mongo_id: @vehicle.id.to_s,
-            chassis: @vehicle.chassis,
-            model: @vehicle.model,
-            brand: @vehicle.brand,
-            ship: @vehicle.ship,
-            situation: @vehicle.situation,
-            status: @vehicle.status,
-            location: @vehicle.location,
-            observations: @vehicle.observations,
-            travel: @vehicle.travel,
-            done: @vehicle.done,
-            created_at: @vehicle.updated_at,
-            updated_at: @vehicle.updated_at
-          )#.merge(image_data)
-        rescue => e
-          Rails.logger.error("Postgres write error: #{e.message}")
-        end
-
         broadcast_vehicles
 
         format.html { redirect_to vehicle_url(@vehicle), notice: 'Vehicle was successfully created.' }

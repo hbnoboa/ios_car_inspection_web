@@ -30,8 +30,3 @@ class Vehicle
 
   has_many :nonconformities, dependent: :destroy
 end
-  
-
-
-class SyncedVehicle < ApplicationRecord
-end
