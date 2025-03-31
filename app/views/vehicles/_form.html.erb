@@ -1,92 +1,92 @@
 <%= form_with(model: vehicle) do |form| %>
-  <% if vehicle.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(vehicle.errors.count, "error") %> prohibited this vehicle from being saved:</h2>
+<% if vehicle.errors.any? %>
+<div style="color: red">
+    <h2><%= pluralize(vehicle.errors.count, "error") %> prohibited this vehicle from being saved:</h2>
 
-      <ul>
+    <ul>
         <% vehicle.errors.each do |error| %>
-          <li><%= error.full_message %></li>
+        <li><%= error.full_message %></li>
         <% end %>
-      </ul>
-    </div>
-  <% end %>
+    </ul>
+</div>
+<% end %>
 
-  <div>
-    <%= form.label :location, style: "display: block" %>
-    <%= form.text_field :location %>
-  </div>
-
-  <div>
-    <%= form.label :type, style: "display: block" %>
-    <%= form.text_field :type %>
-  </div>
-
-  <div>
+<div>
     <%= form.label :chassis, style: "display: block" %>
     <%= form.text_field :chassis %>
-  </div>
+</div>
 
-  <div>
-    <%= form.label :nonconformity, style: "display: block" %>
-    <%= form.number_field :nonconformity %>
-  </div>
-
-  <div>
+<div>
     <%= form.label :model, style: "display: block" %>
     <%= form.text_field :model %>
-  </div>
+</div>
 
-  <div>
-    <%= form.label :status, style: "display: block" %>
-    <%= form.text_field :status %>
-  </div>
+<div>
+    <%= form.label :brand, style: "display: block" %>
+    <%= form.text_field :brand %>
+</div>
 
-  <div>
+<div>
     <%= form.label :ship, style: "display: block" %>
     <%= form.text_field :ship %>
-  </div>
+</div>
 
-  <div>
+<div>
+    <%= form.label :travel, style: "display: block" %>
+    <%= form.text_field :travel %>
+</div>
+
+<div>
+    <%= form.label :location, style: "display: block" %>
+    <%= form.text_field :location %>
+</div>
+
+<div>
     <%= form.label :situation, style: "display: block" %>
     <%= form.text_field :situation %>
-  </div>
+</div>
 
-  <div>
+<div>
+    <%= form.label :status, style: "display: block" %>
+    <%= form.text_field :status %>
+</div>
+
+<div>
+    <%= form.label :nonconformity, style: "display: block" %>
+    <%= form.number_field :nonconformity %>
+</div>
+
+<div>
     <%= form.label :observations, style: "display: block" %>
-    <%= form.text_area :observations %>
-  </div>
+    <%= form.text_field :observations %>
+</div>
 
-  <div>
-    <%= form.label :etChassisImage, style: "display: block" %>
+<div>
+    <%= form.label :done, style: "display: block" %>
+    <%= form.text_field :done %>
+</div>
+
+<div>
+    <%= form.label :etChassisImage, "ET Chassis Image:" %><br>
     <%= form.file_field :etChassisImage %>
-  </div>
+</div>
 
-  <div>
-    <%= form.label :profileImage, style: "display: block" %>
+<div>
+    <%= form.label :profileImage, "Profile Image:" %><br>
     <%= form.file_field :profileImage %>
-  </div>
+</div>
 
-  <div>
-    <%= form.label :frontImage, style: "display: block" %>
+<div>
+    <%= form.label :frontImage, "Front Image:" %><br>
     <%= form.file_field :frontImage %>
-  </div>
+</div>
 
-  <div>
-    <%= form.label :backImage, style: "display: block" %>
+<div>
+    <%= form.label :backImage, "Back Image:" %><br>
     <%= form.file_field :backImage %>
-  </div>
+</div>
 
-  <div>
-    <%= form.label :rightSideImage, style: "display: block" %>
-    <%= form.file_field :rightSideImage %>
-  </div>
-
-  <div>
-    <%= form.label :leftSideImage, style: "display: block" %>
-    <%= form.file_field :leftSideImage %>
-  </div>
-
-  <div>
+<div>
     <%= form.submit %>
-  </div>
+</div>
 <% end %>

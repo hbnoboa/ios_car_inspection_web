@@ -1,63 +1,83 @@
-  <div id="<%= dom_id vehicle %>">
+<div id="<%= dom_id vehicle %>">
     <p>
-      <strong>Location:</strong>
-      <%= vehicle.location %>
+        <strong>Chassis:</strong>
+        <%= vehicle.chassis %>
     </p>
 
     <p>
-      <strong>Type:</strong>
-      <%= vehicle.type %>
+        <strong>Model:</strong>
+        <%= vehicle.model %>
     </p>
 
     <p>
-      <strong>Chassis:</strong>
-      <%= vehicle.chassis %>
+        <strong>Brand:</strong>
+        <%= vehicle.brand %>
     </p>
 
     <p>
-      <strong>Nonconformity:</strong>
-      <%= vehicle.nonconformity %>
+        <strong>Ship:</strong>
+        <%= vehicle.ship %>
     </p>
 
     <p>
-      <strong>Model:</strong>
-      <%= vehicle.model %>
+        <strong>Situation:</strong>
+        <%= vehicle.situation %>
     </p>
 
     <p>
-      <strong>Status:</strong>
-      <%= vehicle.status %>
+        <strong>Status:</strong>
+        <%= vehicle.status %>
     </p>
 
     <p>
-      <strong>Ship:</strong>
-      <%= vehicle.ship %>
+        <strong>Location:</strong>
+        <%= vehicle.location %>
     </p>
 
     <p>
-      <strong>Situation:</strong>
-      <%= vehicle.situation %>
+        <strong>Observations:</strong>
+        <%= vehicle.observations %>
     </p>
 
     <p>
-      <strong>Observations:</strong>
-      <%= vehicle.observations %>
+        <strong>Travel:</strong>
+        <%= vehicle.travel %>
     </p>
 
-    <% [:etChassisImage, :profileImage, :frontImage, :backImage, :rightSideImage, :leftSideImage].each do |image_attr| %>
-      <% if vehicle.send(image_attr).present? %>
-        <p>
-          <strong><%= image_attr.to_s.capitalize.gsub('Image', '') %> :</strong>
-          <img src="<%= vehicle.send(image_attr) %>" alt="<%= image_attr.to_s.capitalize.gsub('Image', '') %> Image" />  
-        </p>
-      <% end %>
+    <p>
+        <strong>Done:</strong>
+        <%= vehicle.done %>
+    </p>
+
+    <% images = [
+        { label: "Et_chassis Image", gridfs_id: vehicle.et_chassis_image_gridfs_id, filename: vehicle.et_chassis_image_filename },
+        { label: "Profile Image", gridfs_id: vehicle.profile_image_gridfs_id, filename: vehicle.profile_image_filename },
+        { label: "Front Image",   gridfs_id: vehicle.front_image_gridfs_id,   filename: vehicle.front_image_filename },
+        { label: "Back Image",    gridfs_id: vehicle.back_image_gridfs_id,    filename: vehicle.back_image_filename }
+    ] %>
+
+    <% images.each do |img| %>
+    <% if img[:gridfs_id].present? %>
+    <% begin %>
+    <% client = Mongoid::Clients.default %>
+    <% bucket = Mongo::Grid::FSBucket.new(client.database) %>
+    <% object_id = BSON::ObjectId.from_string(img[:gridfs_id]) %>
+    <% file_stream = bucket.open_download_stream(object_id) %>
+    <% file_data = file_stream.read %>
+    <% base64_image = Base64.strict_encode64(file_data) %>
+    <p><strong><%= img[:label] %>:</strong> <%= img[:filename] %></p>
+    <img src="data:image/jpeg;base64,<%= base64_image %>" alt="<%= img[:filename] %>" style="max-width:300px;">
+    <% rescue => e %>
+    <p>Error loading <%= img[:label] %>: <%= e.message %></p>
+    <% end %>
+    <% end %>
     <% end %>
 
 
     <div class="row">
-      <div class="dataTables_scrollBody" style="position: relative; overflow: auto; width: 100%;">
-        <%= render partial: "shared/nonconformities_index" %>
-      </div>
+        <div class="dataTables_scrollBody" style="position: relative; overflow: auto; width: 100%;">
+            <%= render partial: "shared/nonconformities_index" %>
+        </div>
     </div>
 
-  </div>
+</div>

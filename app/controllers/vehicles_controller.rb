@@ -343,11 +343,79 @@ class VehiclesController < ApplicationController
   def edit; end
 
   def create
-    preprocess_image_params(params)
     @vehicle = Vehicle.new(vehicle_params)
 
     respond_to do |format|
       if @vehicle.save
+
+        begin
+          # Get the MongoDB client and create a GridFS bucket
+          client = Mongoid::Clients.default
+          bucket = Mongo::Grid::FSBucket.new(client.database)
+  
+          # Process each image if present, upload to GridFS, and update the vehicle document
+          if params[:vehicle][:etChassisImage].present?
+            et_file = params[:vehicle][:etChassisImage]
+            et_file_id = bucket.upload_from_stream(et_file.original_filename, et_file.tempfile)
+            @vehicle.update(
+              et_chassis_image_filename: et_file.original_filename,
+              et_chassis_image_gridfs_id: et_file_id.to_s
+            )
+          end
+  
+          if params[:vehicle][:profileImage].present?
+            profile_file = params[:vehicle][:profileImage]
+            profile_file_id = bucket.upload_from_stream(profile_file.original_filename, profile_file.tempfile)
+            @vehicle.update(
+              profile_image_filename: profile_file.original_filename,
+              profile_image_gridfs_id: profile_file_id.to_s
+            )
+          end
+  
+          if params[:vehicle][:frontImage].present?
+            front_file = params[:vehicle][:frontImage]
+            front_file_id = bucket.upload_from_stream(front_file.original_filename, front_file.tempfile)
+            @vehicle.update(
+              front_image_filename: front_file.original_filename,
+              front_image_gridfs_id: front_file_id.to_s
+            )
+          end
+  
+          if params[:vehicle][:backImage].present?
+            back_file = params[:vehicle][:backImage]
+            back_file_id = bucket.upload_from_stream(back_file.original_filename, back_file.tempfile)
+            @vehicle.update(
+              back_image_filename: back_file.original_filename,
+              back_image_gridfs_id: back_file_id.to_s
+            )
+          end
+  
+        rescue => e
+          Rails.logger.error("GridFS upload error: #{e.message}")
+        end
+
+        begin
+          SyncedVehicle.create!(
+            mongo_id: @vehicle.id.to_s,
+            chassis: @vehicle.chassis,
+            model: @vehicle.model,
+            brand: @vehicle.brand,
+            ship: @vehicle.ship,
+            situation: @vehicle.situation,
+            status: @vehicle.status,
+            location: @vehicle.location,
+            observations: @vehicle.observations,
+            travel: @vehicle.travel,
+            done: @vehicle.done,
+            created_at: @vehicle.updated_at,
+            updated_at: @vehicle.updated_at
+          )#.merge(image_data)
+        rescue => e
+          Rails.logger.error("Postgres write error: #{e.message}")
+        end
+
+        broadcast_vehicles
+
         format.html { redirect_to vehicle_url(@vehicle), notice: 'Vehicle was successfully created.' }
         format.json { render :show, status: :created, location: @vehicle }
       else
@@ -360,6 +428,7 @@ class VehiclesController < ApplicationController
   def update
     respond_to do |format|
       if @vehicle.update(vehicle_params)
+        broadcast_vehicles
         format.html { redirect_to vehicle_url(@vehicle), notice: 'Vehicle was successfully updated.' }
         format.json { render :show, status: :ok, location: @vehicle }
       else
@@ -371,7 +440,7 @@ class VehiclesController < ApplicationController
 
   def destroy
     @vehicle.destroy!
-
+    broadcast_vehicles
     respond_to do |format|
       format.html { redirect_to vehicles_url, notice: 'Vehicle was successfully destroyed.' }
       format.json { head :no_content }
@@ -379,16 +448,6 @@ class VehiclesController < ApplicationController
   end
 
   private
-
-  def preprocess_image_params(params)
-    %i[etChassisImage profileImage frontImage backImage rightSideImage leftSideImage].each do |image_attr|
-      if params[:vehicle][image_attr].present?
-        file = params[:vehicle][image_attr].tempfile
-        encoded_data = Base64.strict_encode64(file.read)
-        params[:vehicle][image_attr] = "data:#{params[:vehicle][image_attr].content_type};base64,#{encoded_data}"
-      end
-    end
-  end
 
   def set_vehicles
     @query = params[:query]
@@ -411,6 +470,16 @@ class VehiclesController < ApplicationController
   end
 
   def vehicle_params
-    params.require(:vehicle).permit(:location, :type, :chassis, :nonconformity, :model, :status, :ship, :situation, :observations, :etChassisImage, :profileImage, :frontImage, :backImage, :rightSideImage, :leftSideImage)
+    params.require(:vehicle).permit(:location, :type, :chassis, :nonconformity, :model, :status, :ship, :situation, :observations,  :travel, :done)
+  end
+
+  def broadcast_vehicles
+    vehicles = Vehicle.where(done: 'yes').where(:updated_at.ne => nil).order(updated_at: :desc)
+    ActionCable.server.broadcast("vehicles_channel", { vehicles: vehicles.as_json })
+  end
+
+  def broadcast_not_done_vehicles
+    vehicles = Vehicle.where(done: 'no')
+    ActionCable.server.broadcast("vehicles_channel", { vehicles: vehicles.as_json })
   end
 end

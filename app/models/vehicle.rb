@@ -2,13 +2,6 @@ class Vehicle
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  field :etChassisImage, type: String 
-  field :profileImage, type: String 
-  field :frontImage, type: String 
-  field :backImage, type: String 
-  field :rightSideImage, type: String 
-  field :leftSideImage, type: String 
-
   field :location, type: String
   field :type, type: String
   field :chassis, type: String
@@ -22,6 +15,23 @@ class Vehicle
   field :observations, type: String
   field :done, type: String, default: "no"
 
-  has_many :nonconformities, dependent: :destroy
+  field :et_chassis_image_filename, type: String
+  field :et_chassis_image_gridfs_id, type: String
 
+  field :profile_image_filename, type: String
+  field :profile_image_gridfs_id, type: String
+
+  field :front_image_filename, type: String
+  field :front_image_gridfs_id, type: String
+
+  field :back_image_filename, type: String
+  field :back_image_gridfs_id, type: String
+
+
+  has_many :nonconformities, dependent: :destroy
+end
+  
+
+
+class SyncedVehicle < ApplicationRecord
 end

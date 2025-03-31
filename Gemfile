@@ -5,6 +5,8 @@ ruby "3.1.4"
 
 gem 'mongoid'
 
+gem 'pg'
+
 gem 'pagy', '~> 5.10 '
 
 gem 'prawn', '~> 2.4'
