@@ -455,6 +455,8 @@ class VehiclesController < ApplicationController
 
   def broadcast_vehicles
     vehicles = Vehicle.where(done: 'yes').where(:updated_at.ne => nil).order(updated_at: :desc)
+    puts "Broadcasting vehicles to vehicles_channel: #{vehicles.as_json}"
+    Rails.logger.info "Broadcasting vehicles to vehicles_channel: #{vehicles.as_json}"
     ActionCable.server.broadcast("vehicles_channel", { vehicles: vehicles.as_json })
   end
 
