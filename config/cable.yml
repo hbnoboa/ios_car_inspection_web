@@ -5,6 +5,4 @@ test:
   adapter: test
 
 production:
-  adapter: redis
-  url: redis://hbnoboa:%40%2312345Ab@redis-16816.crce181.sa-east-1-2.ec2.redns.redis-cloud.com:16816
-  channel_prefix: ios_car_inspection_web_production
+  adapter: async
