@@ -49,6 +49,15 @@
         <%= vehicle.done %>
     </p>
 
+    <% [:etChassisImage, :profileImage].each do |image_attr| %>
+    <% if vehicle.send(image_attr).present? %>
+    <p>
+        <strong><%= image_attr.to_s.capitalize.gsub('Image', '') %> :</strong>
+        <img src="<%= vehicle.send(image_attr) %>" alt="<%= image_attr.to_s.capitalize.gsub('Image', '') %> Image" />
+    </p>
+    <% end %>
+    <% end %>
+
     <% images = [
         { label: "Et_chassis Image", gridfs_id: vehicle.et_chassis_image_gridfs_id, filename: vehicle.et_chassis_image_filename },
         { label: "Profile Image", gridfs_id: vehicle.profile_image_gridfs_id, filename: vehicle.profile_image_filename },

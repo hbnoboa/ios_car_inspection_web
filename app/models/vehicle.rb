@@ -15,6 +15,9 @@ class Vehicle
   field :observations, type: String
   field :done, type: String, default: "no"
 
+  field :etChassisImage, type: String
+  field :profileImage, type: String
+
   field :et_chassis_image_filename, type: String
   field :et_chassis_image_gridfs_id, type: String
 
@@ -29,4 +32,36 @@ class Vehicle
 
 
   has_many :nonconformities, dependent: :destroy
+
+
+  after_create :broadcast_create
+  after_update :broadcast_update
+  after_destroy :broadcast_destroy
+
+  private
+
+  
+  def broadcast_create
+    vehicles = Vehicle.where(done: 'yes').where(:updated_at.ne => nil).order(updated_at: :desc)
+    ActionCable.server.broadcast "vehicles_channel", {
+      action: "create",
+      vehicles: vehicles.as_json
+    }
+  end
+
+  def broadcast_update
+    vehicles = Vehicle.where(done: 'yes').where(:updated_at.ne => nil).order(updated_at: :desc)
+    ActionCable.server.broadcast "vehicles_channel", {
+      action: "update",
+      vehicles: vehicles.as_json
+    }
+  end
+
+  def broadcast_destroy
+    vehicles = Vehicle.where(done: 'yes').where(:updated_at.ne => nil).order(updated_at: :desc)
+    ActionCable.server.broadcast "vehicles_channel", {
+      action: "destroy",
+      vehicles: vehicles.as_json
+    }
+  end
 end

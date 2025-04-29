@@ -394,8 +394,6 @@ class VehiclesController < ApplicationController
           Rails.logger.error("GridFS upload error: #{e.message}")
         end
 
-        broadcast_vehicles
-
         format.html { redirect_to vehicle_url(@vehicle), notice: 'Vehicle was successfully created.' }
         format.json { render :show, status: :created, location: @vehicle }
       else
@@ -408,7 +406,6 @@ class VehiclesController < ApplicationController
   def update
     respond_to do |format|
       if @vehicle.update(vehicle_params)
-        broadcast_vehicles
         format.html { redirect_to vehicle_url(@vehicle), notice: 'Vehicle was successfully updated.' }
         format.json { render :show, status: :ok, location: @vehicle }
       else
@@ -420,7 +417,6 @@ class VehiclesController < ApplicationController
 
   def destroy
     @vehicle.destroy!
-    broadcast_vehicles
     respond_to do |format|
       format.html { redirect_to vehicles_url, notice: 'Vehicle was successfully destroyed.' }
       format.json { head :no_content }
@@ -451,15 +447,5 @@ class VehiclesController < ApplicationController
 
   def vehicle_params
     params.require(:vehicle).permit(:location, :type, :chassis, :nonconformity, :model, :status, :ship, :situation, :observations,  :travel, :done)
-  end
-
-  def broadcast_vehicles
-    vehicles = Vehicle.where(done: 'yes').where(:updated_at.ne => nil).order(updated_at: :desc)
-    ActionCable.server.broadcast("vehicles_channel", { vehicles: vehicles.as_json })
-  end
-
-  def broadcast_not_done_vehicles
-    vehicles = Vehicle.where(done: 'no')
-    ActionCable.server.broadcast("vehicles_channel", { vehicles: vehicles.as_json })
   end
 end
