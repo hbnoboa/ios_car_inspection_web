@@ -3,6 +3,10 @@ class VehiclesChannel < ApplicationCable::Channel
     # stream_from "some_channel"
     stream_from "vehicles_channel"
     broadcast_vehicles_list
+    ActionCable.server.broadcast("vehicles_channel", {
+      action: "test",
+      message: "Welcome to vehicles_channel"
+    })
   end
 
   def unsubscribed
