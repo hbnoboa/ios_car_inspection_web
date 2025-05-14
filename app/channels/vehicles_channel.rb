@@ -15,7 +15,7 @@ class VehiclesChannel < ApplicationCable::Channel
     vehicles = Vehicle.where(done: 'yes').where(:updated_at.ne => nil).order(updated_at: :desc)
     ActionCable.server.broadcast("vehicles_channel", {
       action: "index",
-      vehicles: vehicles.as_json
+      message: vehicles.as_json
     })
   end
 end

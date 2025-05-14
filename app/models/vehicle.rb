@@ -15,8 +15,12 @@ class Vehicle
   field :observations, type: String
   field :done, type: String, default: "no"
 
+  #----------------------------------------------------
+
   field :etChassisImage, type: String
   field :profileImage, type: String
+
+  #----------------------------------------------------
 
   field :et_chassis_image_filename, type: String
   field :et_chassis_image_gridfs_id, type: String
