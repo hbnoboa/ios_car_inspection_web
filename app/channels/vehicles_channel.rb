@@ -1,7 +1,11 @@
 class VehiclesChannel < ApplicationCable::Channel
   def subscribed
     stream_from "vehicles_channel"
-    broadcast_vehicles_list
+    vehicles = Vehicle.all.as_json
+    ActionCable.server.broadcast("vehicles_channel", {
+      action: "index",
+      vehicles: vehicles
+    })
   end
 
   def unsubscribed
