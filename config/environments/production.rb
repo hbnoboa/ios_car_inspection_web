@@ -41,16 +41,9 @@ Rails.application.configure do
   # config.action_cable.mount_path = nil
   # config.action_cable.url = "wss://example.com/cable"
   # config.action_cable.allowed_request_origins = [ "http://example.com", /http:\/\/example.*/ ]
-  config.action_cable.url = "wss://ios-car-f8bf78f8eb62.herokuapp.com/cable"
-  config.action_cable.allowed_request_origins = [
-    "https://ios-car-f8bf78f8eb62.herokuapp.com",
-    "http://ios-car-f8bf78f8eb62.herokuapp.com"
-  ]
-
-  config.action_cable.disable_request_forgery_protection = true
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  config.force_ssl = true
+  config.force_ssl = false
 
   # Include generic and useful information about system operation, but avoid logging too much
   # information to avoid inadvertent exposure of personally identifiable information (PII).
