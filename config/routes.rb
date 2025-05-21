@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  mount ActionCable.server => '/cable'
   resources :measures
   resources :quadrants
   resources :nonconformity_locals
