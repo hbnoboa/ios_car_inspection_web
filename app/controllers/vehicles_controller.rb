@@ -22,7 +22,7 @@ class VehiclesController < ApplicationController
     @vehicles = @vehicles.where(:chassis => /#{@chassis}/i) if @chassis.present?
     @vehicles = @vehicles.where(model: /#{@model}/i) if @model.present?
     @vehicles = @vehicles.where(situation: /#{@situation}/i) if @situation.present?
-    @vehicles = @vehicles.where(:nonconformity.ne => 0) if @nonconformity == "0"
+    @vehicles = @vehicles.where(:nonconformity.gt => 0) if @nonconformity == "0"
     @vehicles = @vehicles.where(updated_at: @start_date..@end_date) if @start_date.present? && @end_date.present?
   
     @vehicles = @vehicles.order(updated_at: :desc)
@@ -241,7 +241,7 @@ class VehiclesController < ApplicationController
     
     vehicle_data = vehicles.map do |model, vehicles_for_model|
       total_units = vehicles_for_model.size
-      total_faulty = vehicles_for_model.count { |vehicle| vehicle.nonconformity != 0 }
+      total_faulty = vehicles_for_model.count { |vehicle| vehicle.nonconformity.to_i > 0 }
       total_faulty == 0 ? percentage = nil : percentage = total_faulty.to_f / total_units * 100
       
     
